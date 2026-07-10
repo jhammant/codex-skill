@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "CodexTaskResult",
-  "description": "Structured result for a delegated Codex task, so the caller can parse the outcome reliably instead of scraping prose.",
+  "description": "Structured result for a delegated Codex task, so the caller can parse the outcome reliably instead of scraping prose. NOTE: OpenAI structured-output strict mode requires every property to appear in `required`; express optionality with nullable types (e.g. [\"boolean\", \"null\"]) rather than omitting the key.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -12,7 +12,7 @@
     "filesChanged": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Repo-relative paths created or modified."
+      "description": "Repo-relative paths created or modified (empty array if none)."
     },
     "testsRun": {
       "type": "boolean",
@@ -28,9 +28,9 @@
       "description": "done = task complete and verified; partial = some work left; blocked = could not proceed."
     },
     "notes": {
-      "type": "string",
-      "description": "Anything the reviewer should know: caveats, follow-ups, assumptions."
+      "type": ["string", "null"],
+      "description": "Anything the reviewer should know: caveats, follow-ups, assumptions (null if none)."
     }
   },
-  "required": ["summary", "status"]
+  "required": ["summary", "filesChanged", "testsRun", "testsPassed", "status", "notes"]
 }
