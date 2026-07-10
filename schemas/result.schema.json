@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CodexTaskResult",
+  "description": "Structured result for a delegated Codex task, so the caller can parse the outcome reliably instead of scraping prose.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "One short paragraph: what was done and why."
+    },
+    "filesChanged": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Repo-relative paths created or modified."
+    },
+    "testsRun": {
+      "type": "boolean",
+      "description": "Whether tests were executed."
+    },
+    "testsPassed": {
+      "type": ["boolean", "null"],
+      "description": "true/false if tests ran; null if not run."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["done", "partial", "blocked"],
+      "description": "done = task complete and verified; partial = some work left; blocked = could not proceed."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Anything the reviewer should know: caveats, follow-ups, assumptions."
+    }
+  },
+  "required": ["summary", "status"]
+}

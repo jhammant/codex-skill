@@ -11,11 +11,26 @@ implement a module, refactor a file — without spending Claude's budget.
 
 ## Why
 
-- **Parallelism.** Codex churns on a hand-off-able task while you keep moving in Claude.
+- **Parallelism.** Codex churns on hand-off-able tasks (one, or several fanned out at
+  once) while you keep moving in Claude.
 - **Separate quota.** Codex runs on your ChatGPT subscription, so it doesn't eat Claude
   quota — and it spends Codex quota that would otherwise expire unused.
+- **Verified, not trusted.** After Codex finishes, Claude runs the tests itself and, if
+  they fail, sends the failures back to Codex to fix (bounded retries) before you ever
+  see it.
 - **Sandboxed + reviewed.** Codex runs `--sandbox workspace-write` (edits in-dir only,
-  no network) and the skill never auto-commits — you always see the diff first.
+  no network), on a `codex/<slug>` branch by default, and the skill never auto-commits —
+  you always see the diff first.
+
+## What it does (v2)
+
+1. **Quota pre-check** — reads your Codex 5h + weekly usage; warns if you're near the cap.
+2. **Effort auto-select** — picks `low`/`medium`/`high`/`xhigh` reasoning by task difficulty.
+3. **Branch by default** — file-changing tasks land on a `codex/<slug>` branch.
+4. **Dispatch** — single task, or **fan out** across several files in parallel; optional
+   structured JSON result (`schemas/result.schema.json`).
+5. **Verify-and-fix** — Claude runs the tests; failures go back to Codex (≤2 passes).
+6. **Review** — diff + status surfaced; nothing committed without your say-so.
 
 ## Install
 
