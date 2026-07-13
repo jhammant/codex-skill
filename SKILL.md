@@ -31,13 +31,18 @@ the acceptance criteria, and an explicit "run the tests and report the results".
 any `@file` mentions to absolute paths. If the task is vague, sharpen it with the user
 first — a fuzzy spec wastes a whole Codex run.
 
-**Pick reasoning effort by difficulty** (Sol is strong at low effort — start low, raise
-for hard jobs). Add `-c model_reasoning_effort=<effort>`:
-- `low` — mechanical/small: single-function edits, adding obvious tests, renames.
+**Pick reasoning effort by difficulty.** gpt-5.6-sol is highly capable at low effort, so
+start low and raise only for hard jobs. Add `-c model_reasoning_effort=<effort>`. The six
+valid values (fastest/cheapest → slowest/deepest) are:
+- `none` — no reasoning at all: a rename, a one-liner, a pure question, trivial mechanics.
+- `minimal` — a tiny, obvious change with a single clear step.
+- `low` — mechanical/small: single-function edits, adding obvious tests.
 - `medium` — a contained module or a few files with clear structure.
-- `high` / `xhigh` — genuinely hard: tricky algorithms, wide refactors, subtle bugs.
-Don't just inherit the config default (often `xhigh`) — it's slower and costs more than
-simple tasks need.
+- `high` — genuinely hard: tricky algorithms, wider refactors, subtle bugs.
+- `xhigh` — the hardest, deepest reasoning; slowest and most expensive.
+
+Don't just inherit the config default (currently `xhigh`) — it's slower and costlier than
+most tasks need. Pick the lowest that fits; re-run at higher effort only if it falls short.
 
 ## 2. Safety — branch by default for file-changing tasks
 
@@ -70,8 +75,12 @@ the same files.
 (`{summary, filesChanged, testsRun, testsPassed, status, notes}`) you can parse reliably
 instead of scraping prose.
 
-Model: inherits `~/.codex/config.toml` (currently `gpt-5.6-sol`); add `-m <model>` to
-override.
+**Model:** inherits the `model` in `~/.codex/config.toml` (currently `gpt-5.6-sol`, the
+newest available to a ChatGPT subscription). Override with `-m <model>`. Valid on a
+ChatGPT-subscription Codex account: `gpt-5.6-sol` (newest) and `gpt-5.5`. Do NOT pass
+`gpt-5.6`, `gpt-5.6-codex`, or `gpt-5.5-codex` — those return `400 "not supported when
+using Codex with a ChatGPT account"` (the model name is `-sol`, not `-codex`). API-key
+accounts may expose more; check `~/.codex/config.toml` / the codex TUI model picker.
 
 ## 4. Verify-and-fix loop (don't just trust the output)
 

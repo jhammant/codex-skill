@@ -77,8 +77,10 @@ codex exec --json --sandbox workspace-write --skip-git-repo-check \
   -C "<dir>" -o "/tmp/codex-<slug>.txt" "<self-contained prompt>"
 ```
 
-It inherits the model from `~/.codex/config.toml` (e.g. `gpt-5.6-sol`); pass `-m <model>`
-or `-c model_reasoning_effort=<low|medium|high|xhigh>` to override.
+It inherits the model from `~/.codex/config.toml` (e.g. `gpt-5.6-sol`, the newest a
+ChatGPT subscription can use — `gpt-5.5` also works; `gpt-5.6`/`-codex` do not). Override
+with `-m <model>` or `-c model_reasoning_effort=<none|minimal|low|medium|high|xhigh>`
+(the six valid efforts — Sol shines at the low end, so start low and raise as needed).
 
 ## License
 
