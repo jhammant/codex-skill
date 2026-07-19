@@ -59,10 +59,16 @@ nothing outside. For a pure question, use `--sandbox read-only` and skip the bra
 **Single task** (background if it's more than a quick job — you keep working in Claude and
 get re-invoked when it finishes):
 ```bash
-codex exec --json --sandbox workspace-write --skip-git-repo-check \
+# Resolve the binary defensively — usually on PATH via the asdf shim, but don't assume.
+CODEX="$(command -v codex || echo "$HOME/.asdf/shims/codex")"
+"$CODEX" exec --json --sandbox workspace-write --skip-git-repo-check \
   -c model_reasoning_effort="<effort>" \
   -C "<dir>" -o "/tmp/codex-<slug>.txt" "<self-contained prompt>"
 ```
+**Verify it actually ran** before trusting the result: check `/tmp/codex-<slug>.txt`
+exists and is non-empty, the log doesn't contain `command not found`, and files changed
+(`git -C "<dir>" status`). A missing binary or bad flag yields a no-op that a wrapping
+command's trailing `echo` can mask as exit 0.
 
 **Fan-out** — for independent units ("write tests for every file in `src/`"), dispatch
 several runs **in parallel in the background** (each with its own `-C`/`-o`/slug), then
