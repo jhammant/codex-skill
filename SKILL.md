@@ -97,9 +97,16 @@ After each task finishes, **Claude** verifies — don't take Codex's word for it
    `"Your previous change left these tests failing: <paste>. Fix them; run the tests again."`
    — same branch/dir. Cap at **2 fix passes**; if still red, stop and report to the user
    with the failures rather than looping.
+4. **Quality gate — green tests are necessary, NOT sufficient.** Independently judge the
+   *real deliverable* against the task's intent, not just whether its own tests pass: does
+   it actually do the thing, and do it *well*? Code can pass a fixture test yet produce
+   thin, misleading, or half-templated real output. Where the task yields real output (a
+   report, a generated file, a user-facing string), inspect **that**, and if it's weak,
+   re-dispatch with specific feedback for a bounded fix pass. This is the check that catches
+   "passed, but not good" — the one plain test-running misses.
 
 This turns fire-and-forget into a reliable delegated unit: Codex builds it, Claude checks
-it, Codex fixes it.
+it (tests **and** output quality), Codex fixes it.
 
 ## 5. Review — never auto-commit
 
