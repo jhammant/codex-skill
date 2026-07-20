@@ -115,6 +115,10 @@ it (tests **and** output quality), Codex fixes it.
 - Let the **user** decide to keep, tweak, merge, or discard. Only commit/merge if they ask.
 - If Codex reports auth trouble ("sign in again" / token expired / `refresh_token`), tell
   the user to run `codex login` — don't silently retry.
+- **Report the cost.** If `quotamax` is installed, run `quotamax runcost codex` after the
+  run to show tokens + API-$ equivalent (or wrap the dispatch in
+  `quotamax measure -- <codex cmd>` to also capture weekly-quota movement). Zero real cost
+  on the subscription, but it makes the spend visible.
 
 ## Good vs bad tasks
 
